@@ -1,4 +1,0 @@
-include README.md
-include _core.pyx
-include hifigan_vocoder/sample_mel.pt
-recursive-include py *.py
