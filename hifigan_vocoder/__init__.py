@@ -15,6 +15,12 @@ MODEL_URL = {
             "https://drive.google.com/file/d/1U9Ywfl7G0KyOGIfL5fNUkSedxH3ADMMv/view?usp=sharing"
         ]
     },
+    "ss": {
+        1: [
+            "https://drive.google.com/file/d/1pDehrRgoF1JrMdAcvR0JNYfo-UJowI2j/view?usp=sharing",
+            "https://drive.google.com/file/d/1U9Ywfl7G0KyOGIfL5fNUkSedxH3ADMMv/view?usp=sharing"
+        ]
+    },
     "vctk": {
         1: [
             "https://drive.google.com/file/d/1yMCfqztc9Z9Q6vupOFGflDb8qAtgdlN-/view?usp=sharing",
@@ -42,7 +48,7 @@ class hifigan():
         
     def get_model(self):
     
-        if self.dataset not in ['uni', 'vctk']:
+        if self.dataset not in MODEL_URL.keys():
             raise RuntimeError('Unsupport dataset.')
         
         model_path = str(Path(__file__).resolve().parent.joinpath(f"{self.dataset}_{self.ver}.pth"))
@@ -50,8 +56,8 @@ class hifigan():
         if not os.path.exists(model_path) or not os.path.exists(config_path):
             print("Downloading model...")
             checkpoint_url, config_url = MODEL_URL[self.dataset][self.ver]
-            gdown.download(checkpoint_url, model_path, quiet=False, fuzzy=True)
-            gdown.download(config_url, config_path, quiet=False, fuzzy=True)
+            gdown.download(checkpoint_url, model_path, quiet=False, fuzzy=True, use_cookies=False)
+            gdown.download(config_url, config_path, quiet=False, fuzzy=True, use_cookies=False)
 
         with open(config_path) as f:
             data = f.read()
@@ -74,6 +80,14 @@ class hifigan():
         return checkpoint_dict
     
     def infer(self, mel):
+        
+        if isinstance(mel, np.ndarray):
+            mel = torch.from_numpy(mel)
+        elif isinstance(mel, torch.Tensor):
+            pass
+        else:
+            raise RuntimeError("Mel datatype is not supported.")
+            
         mel = mel.to(self.device)
         y_g_hat = self.model(mel)
         audio = y_g_hat.squeeze()

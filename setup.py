@@ -8,7 +8,7 @@ LICENSE          = "MIT"
 KEYWORDS         = "None"
 URL              = "https://github.com/mushanshanshan/hifigan"
 README           = ".github/README.md"
-VERSION          = "0.1"
+VERSION          = "0.1.1"
 CLASSIFIERS      = [
   "Environment :: Console",
   "License :: OSI Approved :: MIT License",
